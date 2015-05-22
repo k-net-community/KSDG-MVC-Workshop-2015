@@ -1,0 +1,12 @@
+﻿@{
+    HttpCookie cookieLayout = HttpContext.Current.Request.Cookies["layout"];
+    string type = "1"; // default.
+    
+    if (cookieLayout != null)
+    {
+        if (!string.IsNullOrEmpty(cookieLayout.Value))
+        {
+            type = cookieLayout.Value;
+        }
+    }
+}

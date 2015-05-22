@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Workshop.Models.GuestBook>
+@using PagedList;
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Index";
+
+    HttpCookie cookieLayout = HttpContext.Current.Request.Cookies["layout"];
+    string type = "1"; // default.
+
+    if (cookieLayout != null)
+    {
+        if (!string.IsNullOrEmpty(cookieLayout.Value))
+        {
+            type = cookieLayout.Value;
+        }
+    }
+
+    switch (type)
+    {
+        case "1":
+            Layout = "~/Views/Shared/_MasterPage.cshtml";
+            break;
+
+        case "2":
+            Layout = "~/Views/Shared/_MasterPage2.cshtml";
+            break;
+
+        default:
+            Layout = "~/Views/Shared/_MasterPage.cshtml";
+            break;
+    }
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        @if (Request.IsAuthenticated)
+        {
+            <p>
+                @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-default" })
+            </p>
+        }
+        else
+        {
+            <p>要發表留言或是回覆討論，請先登入你的 Facebook 帳戶。</p>
+        }
+        <div id="threadView">
+            @Html.Partial("_ThreadView", this.Model)
+        </div>
+    </div>
+</div>
+@section PageScripts
+{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+}

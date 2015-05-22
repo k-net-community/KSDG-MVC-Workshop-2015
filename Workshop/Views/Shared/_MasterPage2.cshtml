@@ -1,0 +1,63 @@
+﻿@using Newtonsoft.Json.Linq;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="~/Content/MasterPage2.css" rel="stylesheet" />
+    @RenderSection("PageCSS", false);
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- The justified navigation menu is meant for single line per list item.
+             Multiple lines will require custom code not provided by Bootstrap. -->
+        <div class="masthead">
+            <h2 class="text-muted">靠北MVC</h2>
+            <nav>
+                <ul class="nav nav-justified">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#">Projects</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Downloads</a></li>
+                    <li><a href="#">About</a></li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        var identity = Request.RequestContext.HttpContext.User.Identity as FormsIdentity;
+                        var o = JObject.Parse(identity.Ticket.UserData);
+                        var name = @o.Property("name").ToObject(typeof(string)).ToString();
+
+                        <li><a href="@Url.Action("Logout")">Hi, @name</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.Action("Login")">Login By Facebook</a></li>
+                    }
+                </ul>
+            </nav>
+        </div>
+        <div class="jumbotron">
+            <h3>歡迎來到靠北MVC留言板 :) ~</h3>
+        </div>
+        <div class="row">
+            @RenderBody()
+        </div>
+        <div class="row">
+            @{ Html.RenderPartial("WorkshopFooter"); }
+        </div>
+    </div> <!-- /container -->
+
+    <script src="~/Scripts/jquery-1.9.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.js"></script>
+    @RenderSection("PageScripts", false);
+</body>
+</html>

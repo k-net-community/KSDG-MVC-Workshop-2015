@@ -1,0 +1,123 @@
+﻿@model Workshop.Models.GuestBook
+
+@{
+    ViewBag.Title = "ThreadView";
+    Layout = "~/Views/Shared/_MasterPage.cshtml";
+}
+
+<h2>ThreadView</h2>
+
+<div>
+    <h4>GuestBook</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.IdReply)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdReply)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Subject)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Subject)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Body)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Body)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+
+    </dl>
+</div>
+<div>
+    <a href="@string.Format("/Home/Create/{0}", ViewBag.PostId.ToString())" class="btn btn-default"> Reply </a>
+</div>
+<div id="replyViewContainer">
+    Loading...
+</div>
+<div>
+    @{ @* @Html.RenderAction("IndexReply", new { PostId = this.Model.Id }); *@ }
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+@section PageScripts
+{
+    <script type="text/javascript">
+
+        var postUrl = "@Url.Action("IndexReply", new { PostId = this.Model.Id })";
+
+        $(function () {
+            $.ajaxSetup({ cache: false });
+            getReplyView();
+        });
+
+        function getReplyView() {
+
+            $("#replyViewContainer").empty();
+            $("#replyViewContainer").load(postUrl, null, function () {
+
+                $("#replyViewContainer a[data-action='delete']").on("click", function (e) {
+
+                    if (!confirm("確定要刪除？"))
+                        return;
+
+                    deleteReply($(e.target).attr("data-id"));
+
+                });
+
+            });
+
+        }
+
+        function deleteReply(id) {
+
+            var deleteUrl = "@Url.Action("Delete")";                       
+
+            $.ajax({
+                type: "POST",
+                url: deleteUrl + "/" + id,
+                data: "",
+                success: function () {
+                    getReplyView();
+                }
+            });
+            
+        }
+
+</script>
+}
